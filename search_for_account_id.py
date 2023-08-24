@@ -3,7 +3,7 @@
 # search for Mastodon account and return account IDs for each result
 from urllib.request import urlopen
 from mastodon import Mastodon
-from credentials import access_token, api_base_url, account_id
+from credentials import access_token, api_base_url
 
 # account to search
 account_to_search = input('Please enter the account to find (eg @axwax@fosstodon.org): ')
