@@ -12,7 +12,7 @@ from urllib.request import urlopen
 
 import inky.inky_uc8159 as inky
 import RPi.GPIO as GPIO
-from inkydev import PIN_INTERRUPT, InkyDev
+from inky.auto import auto
 from mastodon import Mastodon
 from PIL import Image, ImageColor, ImageDraw, ImageFont
 
@@ -22,12 +22,12 @@ import sys
 import os
 
 # change working directory to script path
-os.chdir(os.path.dirname(sys.argv[0]))
+#os.chdir(os.path.dirname(sys.argv[0]))
 
 # configuration
 
 # how many posts should be loaded
-max_posts = 20 
+max_posts = 20
 
 # size and position of the (cropped square) thumbnail
 thumb_width = 200
@@ -48,8 +48,8 @@ post_id = 0
 img_id = 0
 
 # set up buttons
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(PIN_INTERRUPT, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+#GPIO.setmode(GPIO.BCM)
+#GPIO.setup(PIN_INTERRUPT, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 # Initialise Mastodon
 mastodon = Mastodon(
@@ -58,11 +58,14 @@ mastodon = Mastodon(
 )
 
 # Set up InkyDev first to power on the display
-inkydev = InkyDev()
+#inkydev = InkyDev()
 
 # Set up the Inky Display
-display = inky.Inky((600, 448))
+#display = inky.Inky((600, 448))
 
+display = auto()
+#print("Colours: {}".format(display.colour))
+#print("Resolution: {}".format(display.resolution))
 
 # Functions
 
@@ -113,7 +116,7 @@ def show_image(img, caption = '', media_id=''):
     # load the image, crop it into a square and create a thumb_width * thumb_width pixel thumbnail
     # (given the shape of the TV I'm using now this should probably be less square and more landscape) 
     image = Image.open(img)
-    im_thumb = crop_max_square(image).resize((thumb_width, thumb_width),  Image.Resampling.LANCZOS)
+    im_thumb = crop_max_square(image).resize((thumb_width, thumb_width),  Image.LANCZOS)
     
     # load the background as the bottom layer
     newImage = Image.new("RGB", (600, 448))
@@ -214,9 +217,10 @@ def handle_interrupt(pin):
             post_id = max_posts -1
         if post_id >= max_posts:
             post_id = 0
-            
+
         show_post_image(post_id,img_id)
-GPIO.add_event_detect(PIN_INTERRUPT, GPIO.FALLING, callback=handle_interrupt)
+
+#GPIO.add_event_detect(PIN_INTERRUPT, GPIO.FALLING, callback=handle_interrupt)
 
 
 # load posts with media attachments from a timeline
@@ -224,9 +228,9 @@ GPIO.add_event_detect(PIN_INTERRUPT, GPIO.FALLING, callback=handle_interrupt)
 # so to get images from lists or the local timeline you would have to filter out posts without media yourself first...
 
 # uncomment the relevant line
-#latest_media_post = mastodon.account_statuses(id = account_id, limit = max_posts, only_media = True) # get images from a personal timeline (change account_id in credentials.py)
+latest_media_post = mastodon.account_statuses(id = account_id, limit = max_posts, only_media = True) # get images from a personal timeline (change account_id in credentials.py)
 #latest_media_post = mastodon.timeline_public(only_media=True, limit=max_posts) # get images from the public timeline / federated feed
-latest_media_post = mastodon.timeline_hashtag('mastogoats', limit = max_posts, only_media = True) # all posts from a certain hashtag
-show_post_image(post_id, 0)
+#latest_media_post = mastodon.timeline_hashtag('mastogoats', limit = max_posts, only_media = True) # all posts from a certain hashtag
+show_post_image(1, 0)
 
 signal.pause()
