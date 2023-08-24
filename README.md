@@ -1,16 +1,14 @@
 # MastoInky
-Display image posts from a Mastodon personal, hashtag or public timeline on a Raspberry Pi with the Pimoroni Inky Developer E Ink
-
+Display image posts from a Mastodon personal, hashtag or public timeline on a Raspberry Pi with the Pimoroni Inky Impression
 ## Prerequisites
-You will need a Raspberry Pi (I used a Zero W) and the [Pimoroni Inky Developer 7-colour Eink display](https://shop.pimoroni.com/products/inky-dev).
+You will need a Raspberry Pi (I used a Zero W) and the [Pimoroni Inky Impression 7-colour Eink display](https://shop.pimoroni.com/products/inky-impression-7-3).
 
 ## Installation
-1. Follow the installation instructions for the Python library at https://github.com/pimoroni/inkydev-python
+1. Either use raspi-config to manually enable I2C and SPI, or do the following
 ```
 sudo raspi-config nonint do_i2c 0
 sudo raspi-config nonint do_spi 0
-pip3 install inkydev
-pip3 install inky[rpi,fonts]
+pip3 install inky[rpi,example-depends]
 ```
 2. Install Python libraries
 ```
@@ -19,9 +17,8 @@ pip3 install pillow
 ```
 3. Download MastoInky to your Pi
 ```
-wget https://github.com/axwax/MastoInky/archive/refs/heads/main.zip
-unzip main.zip
-cd  MastoInky-main
+git clone https://github.com/recantha/MastoInky
+cd MastoInky
 ```
 4. Get a Mastodon access token at https://{your mastodon instance}/settings/applications
 
